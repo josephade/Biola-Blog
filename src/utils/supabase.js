@@ -20,6 +20,16 @@ export async function getUser() {
     }
   }
 
+  async function confirmUserAccess() {
+    const user = await getUser();
+    const actionBtns = document.getElementById("action_btns");
+    const blogUserId = document.getElementById("blogUserId").value;
+
+    if (blogUserId === user.id) {
+      actionBtns.classList.remove("hidden");
+      actionBtns.classList.add("flex");
+    }
+  }
   // export async function uploadImg(heroImage, imagePath){
   //   const imagePath = `${heroImage.name}-${Date.now()}`;
   //   const { data: imgData, error: uploadError } = await supabase.storage

@@ -23,7 +23,6 @@ if (publishBtn) {
     let imageUrl;
 
     if (heroImage) {
-      publishBtn.innerText = "Posting...";
       const imagePath = `${heroImage.name}-${Date.now()}`;
       const { data: imgData, error: uploadError } = await supabase.storage
         .from("blog-images")
@@ -37,18 +36,17 @@ if (publishBtn) {
       imageUrl = supabase.storage.from("blog-images").getPublicUrl(imagePath)
         .data.publicUrl;
 
-      if (userId) {
-        const { data, error } = await supabase
-          .from("blogs")
-          .insert([{ title, tags, hero_img: imageUrl, author, body, userId }]);
+      publishBtn.innerText = "Posting...";
+      const { data, error } = await supabase
+        .from("blogs")
+        .insert([{ title, tags, hero_img: imageUrl, author, body, userId }]);
 
-        if (error) {
-          alert(`Error: ${error.message}`);
-        } else {
-          alert("Post added!");
-          publishBtn.innerText = "Publish Post.";
-          window.location.href = "/";
-        }
+      if (error) {
+        alert(`Error: ${error.message}`);
+      } else {
+        alert("Post added!");
+        publishBtn.innerText = "Publish Post.";
+        window.location.href = "/";
       }
     } else {
       alert("Add an image");
@@ -115,7 +113,7 @@ if (updateBlogBtn) {
 }
 
 const deleteButton = document.getElementById("delete-blog-btn");
-console.log(deleteButton);
+
 if (deleteButton)
   deleteButton?.addEventListener("click", async () => {
     const blogId = document
