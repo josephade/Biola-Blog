@@ -1,15 +1,8 @@
-import { supabase } from "../utils/supabase";
+import { getUser, supabase } from "../utils/supabase";
 
-// export async function signUp(email, password) {
-//   const { data, error } = await supabase.auth.signUp({ email, password });
-//   if (error) throw error;
-//   console.log(data);
-//   return data;
-// }
-
-const signUpForm = document.getElementById("sign_up");
-if (signUpForm) {
-  signUpForm.addEventListener("submit", async (e) => {
+const signUpBtn = document.getElementById("sign_up_btn");
+if (signUpBtn) {
+  signUpBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const name = document.getElementById("signup-name").value;
     const email = document.getElementById("signup-email").value;
@@ -33,9 +26,9 @@ if (signUpForm) {
   });
 }
 
-const signinForm = document.getElementById("sign_in");
-if (signinForm) {
-  signinForm.addEventListener("submit", async (e) => {
+const signinBtn = document.getElementById("sign_in_btn");
+if (signinBtn) {
+  signinBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -47,22 +40,53 @@ if (signinForm) {
     if (error) alert(error.message);
     else {
       alert("Success!");
-      window.location.href = "/";
+      window.location.href = "/settings";
       return data;
     }
   });
 }
 
-// export async function signIn(email, password) {
-//   const { data, error } = await supabase.auth.signInWithPassword({
-//     email,
-//     password,
-//   });
-//   if (error) throw error;
-//   return data;
-// }
+let name = document.getElementById("user_name");
+window.addEventListener("DOMContentLoaded", async () => {
+  const data = await getUser();
+  console.log(data);
 
-export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw error;
+  if (data) {
+    const fullName = data?.user_metadata?.full_name || null;
+    console.log(fullName);
+    if (fullName) {
+      name.value = fullName;
+    }
+  }
+});
+
+const updateBtn = document.getElementById("update_profile");
+if (updateBtn) {
+  const password = document.getElementById("update_password").value;
+
+  updateBtn.addEventListener("click", async (e) => {
+    if (name.value !== "" || password !== "") {
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: password || undefined,
+        data: { full_name: name.value.trim() || undefined },
+      });
+
+      if (updateError) {
+        alert(`Error updating user details: ${updateError.message}`);
+      } else {
+        alert("User details updated successfully!");
+      }
+    } else {
+      alert("Can't submit empty form");
+    }
+  });
+}
+if (document.getElementById("sign_out")) {
+  document.getElementById("sign_out").addEventListener("click", async () => {
+    const { error: signOutError } = await supabase.auth.signOut();
+    if (signOutError) throw error;
+    else {
+      window.location.href = "/";
+    }
+  });
 }
