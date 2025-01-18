@@ -1,3 +1,5 @@
+import { supabase } from '../supabase';
+
 export function slugify(text) {
   return text
     .toString()
@@ -49,4 +51,48 @@ export function formatBlogPosts(posts, {
   }
   return filteredPosts;
 
+}
+
+
+// export async function createPost(title, content, author_id) {
+//   const { data, error } = await supabase.from('blogs').insert([{ title, content, author_id }]);
+//   if (error) throw error;
+//   return data;
+// }
+
+
+
+export async function getPosts() {
+  const { data, error } = await supabase
+    .from('blogs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(5);
+  if (error) throw error;
+  return data;
+}
+
+export async function updatePost(post_id, updates) {
+  const { data, error } = await supabase.from('blogs').update(updates).eq('id', post_id);
+  if (error) throw error;
+  return data;
+}
+
+export async function deletePost(post_id) {
+  const { data, error } = await supabase.from('blogs').delete().eq('id', post_id);
+  if (error) throw error;
+  return data;
+}
+
+// Comment functions
+export async function addComment(post_id, content, author_id) {
+  const { data, error } = await supabase.from('comments').insert([{ post_id, content, author_id }]);
+  if (error) throw error;
+  return data;
+}
+
+export async function getComments(post_id) {
+  const { data, error } = await supabase.from('comments').select('*').eq('post_id', post_id);
+  if (error) throw error;
+  return data;
 }

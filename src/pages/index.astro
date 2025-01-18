@@ -4,13 +4,24 @@ import MainLayout from "../layouts/MainLayout.astro";
 import PostCard from "../components/PostCard.astro";
 import Link from "../components/Link.astro";
 
-// utils imports
-import { formatBlogPosts } from "../js/utils";
+import { getPosts } from "../js/utils";
+import { Image } from "astro:assets";
 
-const allPosts = await Astro.glob("./blog/*.md");
-const formattedPosts = formatBlogPosts(allPosts, {
-  limit: 3,
-});
+const posts = await getPosts();
+console.log(posts);
+
+interface Props {
+  id: string;
+  title: string;
+  tags: string[];
+  hero_img: string;
+  body: string;
+}
+
+// const allPosts = await Astro.glob("./blog/*.md");
+// const formattedPosts = formatBlogPosts(allPosts, {
+//   limit: 3,
+// });
 ---
 
 <MainLayout title="My Blog">
@@ -34,13 +45,46 @@ const formattedPosts = formatBlogPosts(allPosts, {
     <h2 class="h1">New Blog Posts</h2>
     <div class="post-container">
       {
-        formattedPosts.map((post) => (
-          <PostCard
-            frontmatter={post.frontmatter}
-            url={post.url}
-            tagType="h3"
-          />
-        ))
+        posts && posts.length > 0 ? (
+          <div>
+            {posts.map((post: Props) => (
+              <article class="card">
+                <div style="display: flex; gap: 10px" class="">
+                  {post.tags.map((tag) => (
+                    <small style="background-color: white; color:black; padding: 6px 10px; margin-bottom: 20px;">
+                      {tag}
+                    </small>
+                  ))}
+                </div>
+                <Image
+                  src={post?.hero_img}
+                  alt={post?.title}
+                  format="webp"
+                  fit="cover"
+                  quality={80}
+                  width="480"
+                  height="460"
+                />
+                <div class="content">
+                  <div>
+                    <h2 class="h3">
+                      <a href="{url}">{post?.title}</a>
+                    </h2>
+                    <small> by </small>
+                  </div>
+                  <p>{post.body.slice(0, 30)}...</p>
+                  <Link
+                    href={`/blog/${post?.id}`}
+                    text="Read Post"
+                    style="secondary"
+                  />
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p>No post</p>
+        )
       }
     </div>
   </section>
