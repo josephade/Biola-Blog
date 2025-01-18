@@ -1,4 +1,4 @@
-import { supabase } from '../supabase';
+import { supabase } from '../utils/supabase';
 
 export function slugify(text) {
   return text
