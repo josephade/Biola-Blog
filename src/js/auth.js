@@ -55,7 +55,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     const fullName = data?.user_metadata?.full_name || null;
     console.log(fullName);
     if (fullName) {
-      name.value = fullName;
+      if(name){
+
+        name.value = fullName;
+      }
     }
   }
 });
