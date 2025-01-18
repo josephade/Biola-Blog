@@ -1,0 +1,85 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { supabase } from "../../utils/supabase";
+
+export async function getStaticPaths() {
+  try {
+    const { data, error } = await supabase.from("blogs").select("*");
+    if (error) {
+      console.error("Error fetching blogs:", error.message);
+    }
+    return (
+      data?.map((post) => ({
+        params: { id: post.id },
+      })) || []
+    );
+  } catch (err: any) {
+    console.error("Error fetching blog paths:", err.message);
+  }
+}
+
+async function getBlogPost(id: string) {
+  const { data, error } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  if (!data) {
+    console.error("No blog found for the given heading.");
+    return null;
+  }
+
+  return data;
+}
+
+const { id } = Astro.params;
+
+if (id === "favicon.ico") {
+  throw new Error("Invalid blog heading: favicon.ico");
+}
+
+const blog = await getBlogPost(id);
+---
+
+<MainLayout>
+  <article id="blog-article" data-blog-id={blog.id}>
+    <header>
+      <div class="container">
+        <div style="display: flex; gap: 10px" class="">
+          {
+            blog.tags.map((tag: string) => (
+              <small style="background-color: white; color:black; padding: 6px 10px; margin-bottom: 20px;">
+                {tag}
+              </small>
+            ))
+          }
+        </div>
+        <h1 class="h2">{blog?.title}</h1>
+        <p style="font-weight: 600;">by {blog?.author}</p>
+        <div
+          class="action-btn"
+          style="display: flex; gap: 10px; align-items: center;"
+        >
+          <a href={`/blog/edit/${blog?.id}`} id="edit">Edit</a>
+          <button id="delete-blog-btn">Delete</button>
+        </div>
+      </div>
+      <img src={blog.hero_img} alt={blog.title} />
+    </header>
+
+    <div class="post-content">
+      <div class="content">
+        {blog?.body}
+      </div>
+      <!-- <div class="sidebar"></div> -->
+    </div>
+  </article>
+
+  <script src="../../js/post.js"></script>
+</MainLayout>

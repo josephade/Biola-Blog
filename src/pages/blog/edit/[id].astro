@@ -1,0 +1,87 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import { supabase } from "../../../utils/supabase";
+
+export async function getStaticPaths() {
+  try {
+    const { data, error } = await supabase.from("blogs").select("*");
+    if (error) {
+      console.error("Error fetching blogs:", error.message);
+    }
+    return (
+      data?.map((post) => ({
+        params: { id: post.id },
+      })) || []
+    );
+  } catch (err: any) {
+    console.error("Error fetching blog paths:", err.message);
+  }
+}
+
+async function getBlogPost(id: string) {
+  const { data, error } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  if (!data) {
+    console.error("No blog found for the given heading.");
+    return null;
+  }
+
+  return data;
+}
+
+const { id } = Astro.params;
+
+if (id === "favicon.ico") {
+  throw new Error("Invalid blog heading: favicon.ico");
+}
+
+const blog = await getBlogPost(id);
+---
+
+<MainLayout>
+  <section class="container">
+    <h1 class="h2">Edit Blog</h1>
+    <form id="create_blog" data-blog-id={blog.id}>
+      <div class="form-group">
+        <label for="edit-tags">Tags</label>
+        <input value={blog?.tags?.join(", ")} id="edit-tags" type="text" />
+      </div>
+      <div class="form-group">
+        <label for="edit-title">Title</label>
+        <input value={blog?.title} id="edit-title" type="text" />
+      </div>
+      <div class="form-group">
+        <label for="edit-blog_image">Blog Image</label>
+        <input
+          name="hero_image"
+          value={blog.hero_image}
+          id="edit-blog_image"
+          type="file"
+          accept="image/*"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea
+          name=""
+          id="edit-content"
+          placeholder="Write in markdown if your post has sections"
+          required>{blog?.body}</textarea
+        >
+      </div>
+      <button id="update-blog_btn" type="submit">Update </button>
+    </form>
+  </section>
+
+  <script src="../../../js/post.js"></script>
+</MainLayout>

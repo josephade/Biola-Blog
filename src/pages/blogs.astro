@@ -1,5 +1,4 @@
 ---
-// component imports
 import Link from "../components/Link.astro";
 import MainLayout from "../layouts/MainLayout.astro";
 
@@ -7,7 +6,6 @@ import { getPosts } from "../js/utils";
 import { Image } from "astro:assets";
 
 const posts = await getPosts();
-console.log(posts);
 
 interface Props {
   id: string;
@@ -15,6 +13,7 @@ interface Props {
   tags: string[];
   hero_img: string;
   body: string;
+  author: string;
 }
 ---
 
@@ -23,7 +22,7 @@ interface Props {
     <h1 class="h1">Blog Posts</h1>
     {
       posts && posts.length > 0 ? (
-        <div>
+        <div class="post-container">
           {posts.map((post: Props) => (
             <article class="card">
               <div style="display: flex; gap: 10px" class="">
@@ -33,24 +32,20 @@ interface Props {
                   </small>
                 ))}
               </div>
-              <Image
-                src={post?.hero_img}
-                alt={post?.title}
-                format="webp"
-                fit="cover"
-                quality={80}
-                width="480"
-                height="460"
-              />
+              <img src={post?.hero_img} alt={post?.title} />
               <div class="content">
                 <div>
                   <h2 class="h3">
-                    <a href="{url}">{post?.title}</a>
+                    {post?.title}
                   </h2>
-                  <small> by </small>
+                  <p style="font-weight: 600;"> by {post?.author} </p>
                 </div>
-                <p>{post.body.slice(0, 30)}...</p>
-                <Link href="" text="Read Post" style="secondary" />
+                <p>{post?.body?.slice(0, 30)}...</p>
+                <Link
+                  href={`/blog/${post?.id}`}
+                  text="Read Post"
+                  style="secondary"
+                />
               </div>
             </article>
           ))}

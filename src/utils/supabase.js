@@ -19,3 +19,18 @@ export async function getUser() {
       return null;
     }
   }
+
+  // export async function uploadImg(heroImage, imagePath){
+  //   const imagePath = `${heroImage.name}-${Date.now()}`;
+  //   const { data: imgData, error: uploadError } = await supabase.storage
+  //     .from("blog-images")
+  //     .upload(imagePath, heroImage);
+
+  //   if (uploadError) {
+  //     console.error("Error uploading image:", uploadError.message);
+  //     return;
+  //   }
+
+  //   imageUrl = supabase.storage.from("blog-images").getPublicUrl(imagePath)
+  //     .data.publicUrl;
+  // }

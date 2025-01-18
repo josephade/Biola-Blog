@@ -16,6 +16,7 @@ interface Props {
   tags: string[];
   hero_img: string;
   body: string;
+  author: string;
 }
 
 // const allPosts = await Astro.glob("./blog/*.md");
@@ -43,49 +44,38 @@ interface Props {
   </section>
   <section class="container" aria-label="New Blog Posts">
     <h2 class="h1">New Blog Posts</h2>
-    <div class="post-container">
-      {
-        posts && posts.length > 0 ? (
-          <div>
-            {posts.map((post: Props) => (
-              <article class="card">
-                <div style="display: flex; gap: 10px" class="">
-                  {post.tags.map((tag) => (
-                    <small style="background-color: white; color:black; padding: 6px 10px; margin-bottom: 20px;">
-                      {tag}
-                    </small>
-                  ))}
+    {
+      posts && posts.length > 0 ? (
+        <div class="post-container">
+          {posts.map((post: Props) => (
+            <article class="card">
+              <div style="display: flex; gap: 10px" class="">
+                {post.tags.map((tag) => (
+                  <small style="background-color: white; color:black; padding: 6px 10px; margin-bottom: 20px;">
+                    {tag}
+                  </small>
+                ))}
+              </div>
+              <img src={post?.hero_img} alt={post?.title} />
+
+              <div class="content">
+                <div>
+                  <h2 class="h3">{post?.title}</h2>
+                  <p style="font-weight: 600;"> by {post?.author} </p>
                 </div>
-                <Image
-                  src={post?.hero_img}
-                  alt={post?.title}
-                  format="webp"
-                  fit="cover"
-                  quality={80}
-                  width="480"
-                  height="460"
+                <p>{post.body.slice(0, 30)}...</p>
+                <Link
+                  href={`/blog/${post?.id}`}
+                  text="Read Post"
+                  style="secondary"
                 />
-                <div class="content">
-                  <div>
-                    <h2 class="h3">
-                      <a href="{url}">{post?.title}</a>
-                    </h2>
-                    <small> by </small>
-                  </div>
-                  <p>{post.body.slice(0, 30)}...</p>
-                  <Link
-                    href={`/blog/${post?.id}`}
-                    text="Read Post"
-                    style="secondary"
-                  />
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <p>No post</p>
-        )
-      }
-    </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p>No post</p>
+      )
+    }
   </section>
 </MainLayout>
