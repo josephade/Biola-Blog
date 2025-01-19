@@ -651,3 +651,15 @@ form button:hover {
   background-color: #404bbfe1;
   color: white;
 }
+
+
+.cta{
+  color: #161616;
+  text-decoration: none;
+  background-color: white;
+  padding: 6px 10px;
+}
+
+.hidden{
+  display: none;
+}

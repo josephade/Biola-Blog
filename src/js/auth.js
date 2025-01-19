@@ -49,9 +49,13 @@ if (signinBtn) {
 let name = document.getElementById("user_name");
 window.addEventListener("DOMContentLoaded", async () => {
   const data = await getUser();
+
+  const settings = document.getElementById("settings-link")
+  const signup = document.getElementById("signup-link")
   console.log(data);
 
   if (data) {
+    signup.classList.add("hidden");
     const fullName = data?.user_metadata?.full_name || null;
     console.log(fullName);
     if (fullName) {
@@ -85,7 +89,8 @@ if (updateBtn) {
   });
 }
 if (document.getElementById("sign_out")) {
-  document.getElementById("sign_out").addEventListener("click", async () => {
+  document.getElementById("sign_out").addEventListener("click", async (e) => {
+    e.preventDefault()
     const { error: signOutError } = await supabase.auth.signOut();
     if (signOutError) throw error;
     else {
