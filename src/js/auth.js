@@ -20,7 +20,7 @@ if (signUpBtn) {
     if (error) alert(error.message);
     else {
       alert("Successfully created an account!");
-      window.location.href = "/";
+      window.location.href = "/signin";
       return data;
     }
   });
