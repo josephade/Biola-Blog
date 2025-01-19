@@ -1,14 +1,11 @@
 ---
-// component imports
-import MainLayout from "../layouts/MainLayout.astro";
-import PostCard from "../components/PostCard.astro";
 import Link from "../components/Link.astro";
+import MainLayout from "../layouts/MainLayout.astro";
 
 import { getPosts } from "../js/utils";
 import { Image } from "astro:assets";
 
 const posts = await getPosts();
-console.log(posts);
 
 interface Props {
   id: string;
@@ -18,32 +15,11 @@ interface Props {
   body: string;
   author: string;
 }
-
-// const allPosts = await Astro.glob("./blog/*.md");
-// const formattedPosts = formatBlogPosts(allPosts, {
-//   limit: 3,
-// });
 ---
 
-<MainLayout title="My Blog">
-  <section class="container about" aria-label="About Me">
-    <img
-      src="/images/dp.jpeg"
-      alt="My headshot"
-      width="200"
-      height="330"
-    />
-    <div class="content">
-      <h1 class="h1">My Blog</h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aperiam quidem
-        tempora beatae mollitia architecto optio sapiente repellendus natus.
-      </p>
-      <Link href="/about/" style="secondary" text="👋 About Me" />
-    </div>
-  </section>
-  <section class="container" aria-label="New Blog Posts">
-    <h2 class="h1">New Blog Posts</h2>
+<MainLayout title="Blog" description="">
+  <section class="container" aria-label="Blog Posts">
+    <h1 class="h1">Blog Posts</h1>
     {
       posts && posts.length > 0 ? (
         <div class="post-container">
@@ -57,13 +33,14 @@ interface Props {
                 ))}
               </div>
               <img src={post?.hero_img} alt={post?.title} />
-
               <div class="content">
                 <div>
-                  <h2 class="h3">{post?.title}</h2>
+                  <h2 class="h3">
+                    {post?.title}
+                  </h2>
                   <p style="font-weight: 600;"> by {post?.author} </p>
                 </div>
-                <p>{post.body.slice(0, 30)}...</p>
+                <p>{post?.body?.slice(0, 30)}...</p>
                 <Link
                   href={`/blog/${post?.id}`}
                   text="Read Post"

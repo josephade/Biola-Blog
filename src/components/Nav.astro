@@ -7,6 +7,7 @@ import Link from "./Link.astro";
 
 // data imports
 import navData from "../data/navData";
+
 ---
 
 <nav aria-label="Primary">
@@ -27,6 +28,33 @@ import navData from "../data/navData";
         ))
       }
     </ul>
+    <!-- <div id="cta" class="" style="display: flex;"> -->
+      <!-- <Link
+        href="/settings"
+        id="settings-link"
+        text="Profile"
+        style="primary"
+      /> -->
+      <!-- <Link
+        href="/signup"
+        id="signup-link"
+        text="Sign Up"
+        style="primary"
+      /> -->
+      <a class="cta hidden" href="/settings" id="settings-link">Profile</a>
+      <a class="cta" href="/signup" id="signup-link">Sign up</a>
+    <!-- </div> -->
+    <!-- {
+      user ? (
+        <div class="">
+          <Link href="/settings" text="Profile" style="primary" />
+        </div>
+      ) : (
+        <div id="cta" class="">
+          <Link href="/signup" text="Sign Up" style="primary" />
+        </div>
+      )
+    } -->
   </div>
 </nav>
 

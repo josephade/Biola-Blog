@@ -13,9 +13,13 @@ interface Props {
   isFilled?: boolean;
   borderVisible?: boolean;
   classes?: string;
+  id?: string;
+  styleNav?: string;
 }
 
 const {
+  id,
+  styleNav,
   text,
   href,
   style,
@@ -29,6 +33,8 @@ const {
 
 <a
   href={href}
+  id={id}
+  style={styleNav}
   class:list={[
     "link",
     classes,
